@@ -1,0 +1,37 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+class Proveedor with ChangeNotifier {
+  String _mensaje = 'Aun no hemos consumido ';
+  int _bolita = -1;
+
+  String get mensaje {
+    return _mensaje;
+  }
+
+  int get bolita {
+    return bolita;
+  }
+
+  void consumir() async {
+    var consumible = await http.get(Uri.http('127.0.0.1:5000', '/consumir'));
+    var jsondata = jsonDecode(consumible.body);
+
+    _mensaje = jsondata["data"];
+    notifyListeners();
+  }
+
+  void cambiamensaje(String fromapi) {
+    _mensaje = fromapi;
+    notifyListeners();
+  }
+
+  set bolita(int bolapi) {
+    _bolita = bolapi;
+    notifyListeners();
+  }
+}
+
+

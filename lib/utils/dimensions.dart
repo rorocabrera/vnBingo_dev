@@ -1,0 +1,1 @@
+const wScreenSize = 600;

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "777304354767",
+    "project_id": "vnbingo-94fbb",
+    "storage_bucket": "vnbingo-94fbb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:777304354767:android:087a4c769e08c2e25d6cba",
+        "android_client_info": {
+          "package_name": "com.example.vnbingo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "777304354767-cfbir1q8ufr3u2mfb9r8uusi3cu4i6iq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWqIQ0_XoIdCe63ezLfstK_YQrkLrJaTI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "777304354767-cfbir1q8ufr3u2mfb9r8uusi3cu4i6iq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "777304354767-8sdidm0avguea59cge991g7dkqegf4ba.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.vnbingo"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
