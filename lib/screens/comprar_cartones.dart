@@ -31,7 +31,10 @@ class _ComprarCartonesState extends State<ComprarCartones> {
             onPressed: () => {
                   for (int i = 0; i < _ncartones!; i++)
                     {
-                      pruebabolita.compraCarton(),
+                      Future.delayed(
+                        Duration(milliseconds: i * 500),
+                        () => pruebabolita.compraCarton(),
+                      )
                     },
                   Navigator.pop(context)
                 },

@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:vnbingo/models/user.dart';
+import 'package:socket_io_client/socket_io_client.dart' as dale;
+
 import 'package:vnbingo/providers/proveecartones.dart';
 
 class Proveedor with ChangeNotifier {
@@ -31,7 +31,7 @@ class Proveedor with ChangeNotifier {
   String _email = ' ';
   Carton _Carton = Carton(b: [0], i: [0], n: [0], g: [0], o: [0], pressed: []);
   double _opacityBola = 0;
-  bool socketflag = false;
+  int _nCartonesv = 0;
 
   List<Carton> _cartones = [];
 
@@ -39,27 +39,23 @@ class Proveedor with ChangeNotifier {
 
   // local server 127.0.0.1:5050
 
-  // IO.Socket socket = IO.io('https://vnbingo.herokuapp.com/',
-  //     IO.OptionBuilder().setTransports(['websocket']).build());
+  dale.Socket socket = dale.io(
+      'https://vnbingo.herokuapp.com/',
+      dale.OptionBuilder()
+          .setTransports(['websocket'])
+          .disableAutoConnect()
+          .build());
 
-  IO.Socket socket = IO.io('http://127.0.0.1:5050',
-      IO.OptionBuilder().setTransports(['websocket']).build());
+  // dale.Socket socket = dale.io(
+  //     'http://127.0.0.1:5050',
+  //     dale.OptionBuilder()
+  //         .setTransports(['websocket'])
+  //         .disableAutoConnect()
+  //         .build());
 
   void conexion(uid, email) {
-    _uid = uid;
-
-    var Map = {'uid': uid, 'email': email};
-    var jsonMap = jsonEncode(Map);
-
-    socket.emit('registrar', jsonMap);
-
-    socket.onConnect((_) {
-      if (socketflag) {
-        socket.emit('registrar', jsonMap);
-        socketflag = false;
-      }
-      hayCom();
-    });
+    socket.connect();
+    registrar(uid, email);
 
     socket.onReconnect((data) => print('recontecto!'));
 
@@ -71,8 +67,6 @@ class Proveedor with ChangeNotifier {
 
     socket.on('state', (data) => prestado(data));
 
-    socket.on('venta carton', (data) => recibeCarton(data));
-
     socket.on('cantaron linea', (data) => cantaronlinea(data));
 
     socket.on('cantaron bingo', (data) => cantaronbingo(data));
@@ -82,16 +76,46 @@ class Proveedor with ChangeNotifier {
     socket.on('stop bingo', (data) => stopbingo(data));
 
     socket.on('jugada', (data) => restablecejugada(data));
+
+    socket.on('cartones vendidos', (data) => updateCartonesVendidos(data));
+
+    socket.onConnect((data) => {registrar(uid, email)});
+  }
+
+  void updateCartonesVendidos(data) {
+    _nCartonesv = data;
+    notifyListeners();
+  }
+
+  void registrar(uid, email) {
+    print('se llamo a conexion con $uid .  $email');
+    _uid = uid;
+    var Map = {'uid': uid, 'email': email};
+    var jsonMap = jsonEncode(Map);
+    print('se emite registrar con $uid .  $email');
+    socket.emit('registrar', jsonMap);
+  }
+
+  void disconnect() {
+    socket.close();
+  }
+
+  bool socketStatus() {
+    return socket.connected;
   }
 
   void restablecejugada(data) {
-    var hello = jsonDecode(data['seCantol'].toString());
-    print(hello);
+    var hello = jsonDecode(data['jugada']['seCantol'].toString());
     _estadoLinea = hello;
     _cantaLineaYa = hello;
+    var jugada = List<int>.from(data['jugada']['jugada'].map((x) => x));
+    var cartones = List<dynamic>.from((data['cartones'].map((x) => x)));
+    _cartones = [];
+    for (var e in cartones) {
+      recibeCarton(e);
+    }
 
-    var jugada = List<int>.from(data['jugada'].map((x) => x));
-    print(jugada);
+    print(cartones);
 
     for (var element in jugada) {
       _pizarra[element - 1] = true;
@@ -109,7 +133,6 @@ class Proveedor with ChangeNotifier {
 
 //Manejo del ****************ESTADO DEL SERVIDOR***********************
   void desconexion() {
-    socketflag = true;
     _stateServer = -1;
 
     print('disconected');
@@ -160,14 +183,16 @@ class Proveedor with ChangeNotifier {
 
   void compraCarton() {
     socket.emit('compra carton', _uid);
+    socket.once('venta carton', (data) => recibeCarton(data));
+    print('se emite comprar carton');
   }
 
   void recibeCarton(data) {
+    print('se recibe un carton');
     _Carton = Carton.fromJson(data);
     if (jsonDecode(data['ganaL'].toString())) {
       _ganeLinea = true;
     }
-
     print(_Carton.toJson());
     _cartones.add(_Carton);
     notifyListeners();
@@ -297,6 +322,10 @@ class Proveedor with ChangeNotifier {
 
   int get stateServer {
     return _stateServer;
+  }
+
+  int get nCartonesv {
+    return _nCartonesv;
   }
 
   String get bolaS {

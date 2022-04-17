@@ -5,18 +5,11 @@ class User {
   final String email;
   final double saldo = 0;
   final String cartera = ' ';
-  final String nombre;
 
-  const User(
-      {required this.email,
-      required this.uid,
-      required this.nombre,
-      saldo = 0,
-      cartera = ''});
+  const User({required this.email, required this.uid, saldo = 0, cartera = ''});
 
   Map<String, dynamic> toJson() => {
         "email": email,
-        "nombre": nombre,
         "uid": uid,
         "saldo": saldo,
         "cartera": cartera,
@@ -27,7 +20,6 @@ class User {
     return User(
       email: snapshot['email'],
       uid: snapshot['uid'],
-      nombre: snapshot['nombre'],
     );
   }
 }

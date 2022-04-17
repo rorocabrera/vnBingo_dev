@@ -16,7 +16,7 @@ class SignupScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<SignupScreen> {
   final TextEditingController _emailcontrolador = TextEditingController();
-  final TextEditingController _usuariocontrolador = TextEditingController();
+
   final TextEditingController _passcontrolador = TextEditingController();
   final TextEditingController _passvericontrolador = TextEditingController();
   bool _cargando = false;
@@ -27,7 +27,6 @@ class _LoginScreenState extends State<SignupScreen> {
     _emailcontrolador.dispose();
     _passcontrolador.dispose();
     _passvericontrolador.dispose();
-    _usuariocontrolador.dispose();
   }
 
   void singUpuser() async {
@@ -35,7 +34,6 @@ class _LoginScreenState extends State<SignupScreen> {
       _cargando = true;
     });
     String res = await AuthMethods().signUpUser(
-      nombre: _usuariocontrolador.text,
       email: _emailcontrolador.text,
       password: _passcontrolador.text,
       password2: _passvericontrolador.text,
@@ -79,11 +77,6 @@ class _LoginScreenState extends State<SignupScreen> {
                   height: 200,
                   width: 400,
                 ),
-                const SizedBox(height: 8),
-                EntradaTexto(
-                    textEditingController: _usuariocontrolador,
-                    hintText: 'Nombre de usuario',
-                    textInputType: TextInputType.emailAddress),
                 const SizedBox(height: 8),
                 EntradaTexto(
                     textEditingController: _emailcontrolador,

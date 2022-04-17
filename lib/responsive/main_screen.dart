@@ -125,10 +125,6 @@ class _Main_ScreenState extends State<Main_Screen>
 
     _reproductor.setVolume(thesocket.volume);
 
-    // if (thesocket.stateServer == -1 && firstpass) {
-    //   Future.delayed(Duration.zero, () => firstpass = false);
-    // }
-
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -180,6 +176,7 @@ class _Main_ScreenState extends State<Main_Screen>
             IconButton(
                 color: priColor,
                 onPressed: () async {
+                  thesocket.disconnect();
                   thesocket.estado(false);
                   await AuthMethods().signOut();
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -194,11 +191,13 @@ class _Main_ScreenState extends State<Main_Screen>
           Flexible(
             flex: 5,
             child: Main_Body_Center(
-                maxWidth: maxWidth,
-                minWidth: minWidth,
-                passHeight: passHeight,
-                saldo: saldo,
-                comprar: comprar),
+              maxWidth: maxWidth,
+              minWidth: minWidth,
+              passHeight: passHeight,
+              saldo: saldo,
+              comprar: comprar,
+              nCartonesv: thesocket.nCartonesv,
+            ),
           )
         ]));
   }
@@ -212,6 +211,7 @@ class Main_Body_Center extends StatelessWidget {
     required this.passHeight,
     required this.saldo,
     required this.comprar,
+    required this.nCartonesv,
   }) : super(key: key);
 
   final double maxWidth;
@@ -219,6 +219,7 @@ class Main_Body_Center extends StatelessWidget {
   final double passHeight;
   final int saldo;
   final bool comprar;
+  final nCartonesv;
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +230,16 @@ class Main_Body_Center extends StatelessWidget {
               Container(
                   width: double.infinity,
                   height: passHeight,
-                  child: Center(child: Text('Saldo:  $saldo '))),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('Saldo:  $saldo '),
+                      SizedBox(
+                        width: 40,
+                      ),
+                      Text('Cartones vendidos:  $nCartonesv ')
+                    ],
+                  )),
               MainBody(height: passHeight),
               if (comprar)
                 Center(

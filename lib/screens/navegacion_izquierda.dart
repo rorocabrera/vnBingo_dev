@@ -30,6 +30,9 @@ class _NavegacionIzquierdaState extends State<NavegacionIzquierda> {
         child: SingleChildScrollView(
           primary: false,
           child: Column(children: [
+            SizedBox(
+              height: controlWidth ? deviceheight * 0.07 : 0,
+            ),
             Container(
               width: 200,
               padding: EdgeInsets.all(5.0),

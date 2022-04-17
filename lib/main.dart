@@ -32,7 +32,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    //Provider.of<Proveedor>(context, listen: false).socketDestroy();
     super.dispose();
   }
 
@@ -72,8 +71,8 @@ class _MyAppState extends State<MyApp> {
                   child: CircularProgressIndicator(
                 color: priColor,
               ));
-            }
-            return const LoginScreen();
+            } else
+              return const LoginScreen();
           },
         ),
       ),

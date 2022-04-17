@@ -13,6 +13,7 @@ class AuthMethods {
     final snapshot = await docUser.get();
 
     if (snapshot.exists) {
+      print('from auth_methods:');
       print(snapshot.data());
       return model.User.fromSnap(snapshot);
     }
@@ -24,7 +25,6 @@ class AuthMethods {
     required String password2,
     required double saldo,
     required String cartera,
-    required String nombre,
   }) async {
     String res = 'Hubo un problema con el registro';
     try {
@@ -35,7 +35,6 @@ class AuthMethods {
 
           model.User user = model.User(
             uid: cred.user!.uid,
-            nombre: nombre,
             email: email,
             saldo: saldo,
             cartera: cartera,

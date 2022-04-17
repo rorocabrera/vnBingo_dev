@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +6,6 @@ import 'package:vnbingo/providers/proveecartones.dart';
 import 'package:vnbingo/providers/user_provider.dart';
 import 'package:vnbingo/screens/bingo_screen.dart';
 import 'package:vnbingo/utils/colors.dart';
-import 'package:vnbingo/utils/secure_storage.dart';
 import 'package:vnbingo/utils/utils.dart';
 
 bool cantadaLinea = false;
@@ -46,9 +43,6 @@ class _CartonWidgetState extends State<CartonWidget> {
     setEmptyFields();
     populateMatrix();
     populatehasBeenP();
-    inspect(_hasBeenPressed);
-    inspect(_isErrorFree);
-    inspect(widget.carton.pressed);
   }
 
   void populatehasBeenP() {
