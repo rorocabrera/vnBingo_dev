@@ -78592,7 +78592,7 @@ A.bZ(o,p,!1)
 return new A.qP(new A.ov(s,A.Ld(new A.cD(o))),A.aj(0,null,!1,t.Z))},
 $S:479}
 A.anp.prototype={
-$1(a8){var s,r,q,p,o,n,m,l,k,j,i,h,g=null,f="http://127.0.0.1:5050",e="autoConnect",d="query",c=t.HZ,b=A.b([],c),a=t.s,a0=A.b([],a),a1=A.b([],a),a2=A.b3(0,0,0,0,0),a3=t.t,a4=A.b([0],a3),a5=A.b([0],a3),a6=A.b([0],a3),a7=A.b([0],a3)
+$1(a8){var s,r,q,p,o,n,m,l,k,j,i,h,g=null,f="https://vnbingo.herokuapp.com/",e="autoConnect",d="query",c=t.HZ,b=A.b([],c),a=t.s,a0=A.b([],a),a1=A.b([],a),a2=A.b3(0,0,0,0,0),a3=t.t,a4=A.b([0],a3),a5=A.b([0],a3),a6=A.b([0],a3),a7=A.b([0],a3)
 a3=A.b([0],a3)
 c=A.b([],c)
 s=A.b([],t.g8)
@@ -78605,7 +78605,7 @@ o=A.j0(f,0,g)
 n=o.gi4()+"://"+o.glX(o)+":"+o.gtv(o)
 m=o.geJ(o)
 l=$.art.ao(0,n)&&$.art.h(0,n).d.ao(0,m)
-if(J.f(p.h(0,"forceNew"),!0)||J.f(p.h(0,"force new connection"),!0)||!1===p.h(0,"multiplex")||l){$.aGR().aS(B.m,"ignoring socket cache for http://127.0.0.1:5050",g,g)
+if(J.f(p.h(0,"forceNew"),!0)||J.f(p.h(0,"force new connection"),!0)||!1===p.h(0,"multiplex")||l){$.aGR().aS(B.m,"ignoring socket cache for https://vnbingo.herokuapp.com/",g,g)
 k=A.aA3(p,f)}else{k=$.art.h(0,n)
 if(k==null){k=A.aA3(p,f)
 $.art.l(0,n,k)}}if(o.gtB(o).length!==0&&p.h(0,d)==null)p.l(0,d,o.gtB(o))
