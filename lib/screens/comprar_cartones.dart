@@ -32,7 +32,7 @@ class _ComprarCartonesState extends State<ComprarCartones> {
                   for (int i = 0; i < _ncartones!; i++)
                     {
                       Future.delayed(
-                        Duration(milliseconds: i * 500),
+                        Duration(milliseconds: i * 1000),
                         () => pruebabolita.compraCarton(),
                       )
                     },

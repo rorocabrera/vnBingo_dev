@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vnbingo/models/user.dart';
+import 'package:vnbingo/providers/proveecartones.dart';
 import 'package:vnbingo/utils/colors.dart';
 
 import '../providers/myproveedor.dart';
@@ -59,36 +60,37 @@ class Toasty extends StatelessWidget {
   }
 }
 
-bool hayBingo(List<ValueNotifier<bool>> hasBeenPressed) {
-  if (linea(hasBeenPressed, 1) &&
-      linea(hasBeenPressed, 2) &&
-      linea(hasBeenPressed, 3) &&
-      linea(hasBeenPressed, 4) &&
-      linea(hasBeenPressed, 5)) {
+bool hayBingo(Carton carton, List<bool> pizarra, List<List> matrix) {
+  if (linea(carton, 1, pizarra, matrix) &&
+      linea(carton, 2, pizarra, matrix) &&
+      linea(carton, 3, pizarra, matrix) &&
+      linea(carton, 4, pizarra, matrix) &&
+      linea(carton, 5, pizarra, matrix)) {
     return true;
   } else {
     return false;
   }
 }
 
-int hayLinea(List<ValueNotifier<bool>> hasBeenPressed) {
-  if (linea(hasBeenPressed, 1)) return 1;
-  if (linea(hasBeenPressed, 2)) return 2;
-  if (linea(hasBeenPressed, 3)) return 3;
-  if (linea(hasBeenPressed, 4)) return 4;
-  if (linea(hasBeenPressed, 5)) return 5;
-  if (linea(hasBeenPressed, 6)) return 6;
-  if (linea(hasBeenPressed, 7)) return 7;
-  if (linea(hasBeenPressed, 8)) return 8;
-  if (linea(hasBeenPressed, 9)) return 9;
-  if (linea(hasBeenPressed, 10)) return 10;
-  if (linea(hasBeenPressed, 11)) return 11;
-  if (linea(hasBeenPressed, 12)) return 12;
+int hayLinea(Carton carton, List<bool> pizarra, List<List> matrix) {
+  if (linea(carton, 1, pizarra, matrix)) return 1;
+  if (linea(carton, 2, pizarra, matrix)) return 2;
+  if (linea(carton, 3, pizarra, matrix)) return 3;
+  if (linea(carton, 4, pizarra, matrix)) return 4;
+  if (linea(carton, 5, pizarra, matrix)) return 5;
+  if (linea(carton, 6, pizarra, matrix)) return 6;
+  if (linea(carton, 7, pizarra, matrix)) return 7;
+  if (linea(carton, 8, pizarra, matrix)) return 8;
+  if (linea(carton, 9, pizarra, matrix)) return 9;
+  if (linea(carton, 10, pizarra, matrix)) return 10;
+  if (linea(carton, 11, pizarra, matrix)) return 11;
+  if (linea(carton, 12, pizarra, matrix)) return 12;
   return 0;
 }
 
-bool linea(List<ValueNotifier<bool>> valueMaster, int caso) {
+bool linea(Carton carton, int caso, List<bool> pizarra, List<List> matrix) {
   int j;
+
   for (int i = 0; i < 5; i++) {
     switch (caso) {
       case 1:
@@ -141,15 +143,18 @@ bool linea(List<ValueNotifier<bool>> valueMaster, int caso) {
       default:
         return false;
     }
-
-    if (valueMaster[j].value) {
-      if (i == 4) {
-        return true;
-      } else {
-        continue;
-      }
+    if (j == 12) {
+      continue;
     } else {
-      return false;
+      if (carton.pressed[j] && pizarra[numerito(j, matrix) - 1]) {
+        if (i == 4) {
+          return true;
+        } else {
+          continue;
+        }
+      } else {
+        return false;
+      }
     }
   }
 

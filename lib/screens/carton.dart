@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:vnbingo/providers/myproveedor.dart';
@@ -11,11 +12,9 @@ import 'package:vnbingo/utils/utils.dart';
 bool cantadaLinea = false;
 
 class CartonWidget extends StatefulWidget {
-  final Carton carton;
   final int cartonindex;
   const CartonWidget({
     Key? key,
-    required this.carton,
     required this.cartonindex,
   }) : super(key: key);
 
@@ -31,45 +30,23 @@ class _CartonWidgetState extends State<CartonWidget> {
   Color colorCarton = myBlueLight;
   Color colorText = myRed;
   Color? ColorStamp = myRed;
+  String route = 'assets/vnbingo_logo_2.svg';
+  int caso = 0;
 
   List<List<dynamic>> matrix = [];
-
-  final List<ValueNotifier<bool>> _hasBeenPressed = [];
-  final List<ValueNotifier<bool>> _isErrorFree = [];
 
   @override
   void initState() {
     super.initState();
     setEmptyFields();
     populateMatrix();
-    populatehasBeenP();
-  }
-
-  void populatehasBeenP() {
-    var pizarra = Provider.of<Proveedor>(context, listen: false).pizarra;
-
-    for (int i = 0; i < 25; i++) {
-      _hasBeenPressed.add(ValueNotifier(widget.carton.pressed[i]));
-    }
-
-    for (int i = 0; i < 25; i++) {
-      var j = numerito(i, matrix) - 1;
-
-      if (j == -1) {
-        _isErrorFree.add(ValueNotifier(true));
-      } else {
-        if (widget.carton.pressed[i] && !pizarra[j]) {
-          _isErrorFree.add(ValueNotifier(false));
-        } else {
-          _isErrorFree.add(ValueNotifier(true));
-        }
-      }
-    }
   }
 
   void populateMatrix() {
     int i = 0;
-    (widget.carton.toJson()).forEach((key, value) {
+    Carton carton = Provider.of<Proveedor>(context, listen: false)
+        .cartones[widget.cartonindex];
+    (carton.toJson()).forEach((key, value) {
       matrix[i] = value;
       i++;
     });
@@ -78,23 +55,30 @@ class _CartonWidgetState extends State<CartonWidget> {
   void setEmptyFields() => setState(() => matrix = List.generate(
       countMatrix, (_) => List.generate(countMatrix, (_) => ' ')));
 
+  callback(casoLinea) {
+    setState(() {
+      caso = casoLinea;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<Proveedor>(context);
-
-    bool visible = false;
 
     if (provider.haysorteo) {
       setState(() {
         colorText = myPurple;
         _opacity = 1;
+        route = 'assets/vnbingo_logo_1.svg';
       });
       if (provider.cantaLineaYa) {
         colorText = myRed;
         colorCarton = myRedLight;
+        route = 'assets/vnbingo_logo_2.svg';
       }
       if (provider.estadoLinea) {
         colorText = myRed;
+        route = 'assets/vnbingo_logo_2.svg';
       }
     }
     TextStyle stilo = GoogleFonts.sigmarOne(
@@ -106,144 +90,202 @@ class _CartonWidgetState extends State<CartonWidget> {
           opacity: _opacity,
           duration: const Duration(seconds: 1),
           child: Center(
-            child: AspectRatio(
-              aspectRatio: 1.95,
-              child: Container(
-                  constraints: BoxConstraints(minWidth: 450),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    color: colorCarton,
-                  ),
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      GridView.builder(
-                          padding: const EdgeInsets.only(top: 20),
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                  childAspectRatio: 2.3,
-                                  crossAxisCount: 5,
-                                  crossAxisSpacing: 6,
-                                  mainAxisSpacing: 3),
-                          itemCount: 25,
-                          itemBuilder: (context, index) {
-                            return Stack(
-                              children: [
-                                EachNumber(
-                                  matrix: matrix,
-                                  colorButton: colorButton,
-                                  isErrorFree: _isErrorFree,
-                                  index: index,
-                                  hasBeenPressed: _hasBeenPressed,
-                                  sorteoActivo: provider.haysorteo,
-                                  carton: widget.carton,
-                                  cartonIndex: widget.cartonindex,
-                                ),
-                                ValueListenableBuilder(
-                                  valueListenable: _hasBeenPressed[index],
-                                  child: Xmark(
-                                    colortext: colorText,
-                                    hasBeenPressed: _hasBeenPressed,
-                                    isErrorFree: _isErrorFree,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 400),
+              child: AspectRatio(
+                aspectRatio: 1.95,
+                child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      color: colorCarton,
+                    ),
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        GridView.builder(
+                            padding: const EdgeInsets.only(top: 20),
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    childAspectRatio: 2.3,
+                                    crossAxisCount: 5,
+                                    crossAxisSpacing: 6,
+                                    mainAxisSpacing: 3),
+                            itemCount: 25,
+                            itemBuilder: (context, index) {
+                              return Stack(
+                                children: [
+                                  EachNumber(
+                                    matrix: matrix,
+                                    colorButton: colorButton,
                                     index: index,
-                                    carton: widget.carton,
                                     cartonIndex: widget.cartonindex,
+                                    callback: callback,
                                   ),
-                                  builder: (context, n, c) {
-                                    return Xmark(
-                                      colortext: colorText,
-                                      hasBeenPressed: _hasBeenPressed,
-                                      isErrorFree: _isErrorFree,
-                                      index: index,
-                                      carton: widget.carton,
-                                      cartonIndex: widget.cartonindex,
-                                    );
-                                  },
-                                ),
-                              ],
-                              alignment: AlignmentDirectional.center,
-                            );
-                          }),
-                      Positioned(
-                        top: -9,
-                        right: 0,
-                        left: 0,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              'B',
-                              textScaleFactor: 1.2,
-                              style: stilo,
-                            ),
-                            Text(
-                              'I',
-                              textScaleFactor: 0.9,
-                              style: stilo,
-                            ),
-                            Text(
-                              'N',
-                              style: stilo,
-                            ),
-                            Text(
-                              'G',
-                              textScaleFactor: 1.2,
-                              style: stilo,
-                            ),
-                            Text(
-                              'O',
-                              style: stilo,
-                            ),
-                          ],
+                                  index == 12
+                                      ? SvgPicture.asset(route)
+                                      : Xmark(
+                                          colortext: colorText,
+                                          index: index,
+                                          cartonIndex: widget.cartonindex,
+                                        ),
+                                ],
+                                alignment: AlignmentDirectional.center,
+                              );
+                            }),
+                        Positioned(
+                          top: -9,
+                          right: 0,
+                          left: 0,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'B',
+                                textScaleFactor: 1.2,
+                                style: stilo,
+                              ),
+                              Text(
+                                'I',
+                                textScaleFactor: 0.9,
+                                style: stilo,
+                              ),
+                              Text(
+                                'N',
+                                style: stilo,
+                              ),
+                              Text(
+                                'G',
+                                textScaleFactor: 1.2,
+                                style: stilo,
+                              ),
+                              Text(
+                                'O',
+                                style: stilo,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      // LineLogic(),
-                    ],
-                  )),
+                        Container(
+                          width: double.infinity,
+                          height: double.infinity,
+                          child: CustomPaint(
+                            foregroundPainter: LinePainter(caso),
+                          ),
+                        )
+                      ],
+                    )),
+              ),
             ),
           ),
         ));
   }
 }
 
-class LineLogic extends StatefulWidget {
-  const LineLogic({
-    Key? key,
-  }) : super(key: key);
+class LinePainter extends CustomPainter {
+  LinePainter(this.caso);
+
+  int caso;
 
   @override
-  State<LineLogic> createState() => _LineLogicState();
-}
+  void paint(Canvas canvas, Size size) {
+    double c1 = 0.1702; // lo que se mueve vertical
+    double c2 = 0.21; // lo que se mueve horizontal
+    double w1 = 0.08;
+    double w2 = 0;
+    double h1 = 0.18;
+    double h2 = 0;
 
-class _LineLogicState extends State<LineLogic> {
-  bool _visibility = false;
+    bool pinta = true;
 
-  void setVisibility() {
-    _visibility = true;
+    switch (caso) {
+      case 0:
+        pinta = false;
+        break;
+      case 1:
+        w2 = w1 + (4 * c2);
+        h2 = h1;
+        break;
+      case 2:
+        h1 += c1;
+        h2 = h1;
+        w2 = w1 + (4 * c2);
+        break;
+      case 3:
+        h1 += 2 * c1;
+        h2 = h1;
+        w2 = w1 + (4 * c2);
+        break;
+      case 4:
+        h1 += 3 * c1;
+        h2 = h1;
+        w2 = w1 + (4 * c2);
+        break;
+      case 5:
+        h1 += 4 * c1;
+        h2 = h1;
+        w2 = w1 + (4 * c2);
+        break;
+      case 6:
+        w1 += 0.013;
+        h1 -= 0.013;
+        w2 = w1;
+        h2 = h1 + (4.2 * c1);
+        break;
+      case 7:
+        w1 += (c2 + 0.009);
+        h1 -= 0.013;
+        w2 = w1;
+        h2 = h1 + (4.2 * c1);
+        break;
+      case 8:
+        w1 += 2 * c2;
+        h1 -= 0.013;
+        w2 = w1;
+        h2 = h1 + (4.2 * c1);
+        break;
+      case 9:
+        w1 += 2.96 * c2;
+        h1 -= 0.013;
+        w2 = w1;
+        h2 = h1 + (4.2 * c1);
+        break;
+      case 10:
+        w1 += 3.93 * c2;
+        h1 -= 0.013;
+        w2 = w1;
+        h2 = h1 + (4.2 * c1);
+        break;
+
+      case 11:
+        w2 = w1 + (4 * c2);
+        h2 = h1 + (4 * c1);
+        break;
+      case 12:
+        w2 = w1 + (4 * c2);
+        h2 = h1;
+        h1 += 4 * c1;
+
+        break;
+      default:
+        break;
+    }
+
+    if (pinta) {
+      final paint = Paint()
+        ..color = myRedLight
+        ..strokeWidth = 10;
+      canvas.drawLine(Offset(size.width * w1, size.height * h1),
+          Offset(size.width * w2, size.height * h2), paint);
+    }
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Visibility(
-      visible: _visibility,
-      child: Positioned(
-          top: -110,
-          left: 2,
-          right: 0,
-          bottom: 0,
-          child: FractionallySizedBox(
-              widthFactor: 0.9,
-              heightFactor: 0.01,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: myRed,
-                  borderRadius: BorderRadius.circular(100.0),
-                ),
-              ))),
-    );
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
+    throw UnimplementedError();
   }
 }
 
@@ -253,20 +295,16 @@ class EachNumber extends StatefulWidget {
     required this.matrix,
     required this.colorButton,
     required this.index,
-    required this.hasBeenPressed,
-    required this.isErrorFree,
-    required this.sorteoActivo,
-    required this.carton,
     required this.cartonIndex,
+    required this.callback,
   }) : super(key: key);
 
   final List<List> matrix;
-  final bool sorteoActivo;
+  final Function callback;
+
   final Color colorButton;
   final int index;
-  final List<ValueNotifier<bool>> hasBeenPressed;
-  final List<ValueNotifier<bool>> isErrorFree;
-  final Carton carton;
+
   final int cartonIndex;
 
   @override
@@ -281,56 +319,52 @@ class _EachNumberState extends State<EachNumber> {
 
     int control = 0;
 
-    return ElevatedButton(
-      onPressed: () {
-        if (widget.index != 12) {
-          if (widget.sorteoActivo) {
-            widget.hasBeenPressed[widget.index].value =
-                !widget.hasBeenPressed[widget.index].value;
+    return widget.index == 12
+        ? Container()
+        : ElevatedButton(
+            onPressed: () {
+              if (widget.index != 12) {
+                if (provider.haysorteo) {
+                  bool state = !provider
+                      .cartones[widget.cartonIndex].pressed[widget.index];
 
-            if (!provider
-                .pizarra[(numerito(widget.index, widget.matrix) - 1)]) {
-              print('can´t be here');
-              widget.isErrorFree[widget.index].value = false;
-            }
-            provider.sendPress(widget.hasBeenPressed[widget.index].value,
-                widget.cartonIndex, widget.index);
+                  if (!provider
+                      .pizarra[(numerito(widget.index, widget.matrix)) - 1]) {
+                    print('can´t be here');
+                  }
+                  provider.sendPress(state, widget.cartonIndex, widget.index);
 
-            if (!provider.estadoLinea) {
-              // if (provider.bolita > 4) {
-              control = hayLinea(widget.hasBeenPressed);
-              if (control > 0) {
-                print('Se ha cantado linea');
-                if (linea(widget.isErrorFree, control)) {
-                  print('La linea es correcta');
+                  if (!provider.estadoLinea) {
+                    control = hayLinea(provider.cartones[widget.cartonIndex],
+                        provider.pizarra, widget.matrix);
+                    if (control > 0) {
+                      provider.cantadaLinea(
+                          usuario.getUser.uid, control, widget.cartonIndex);
+                      widget.callback(control);
+                    }
+                  }
 
-                  provider.cantadaLinea(
-                      usuario.getUser.uid, control, widget.cartonIndex);
-                }
-                // }
-              }
-            }
-            if (!provider.cantaBingoYa && !provider.estadoBingo) {
-              if (hayBingo(widget.hasBeenPressed)) {
-                print('Se ha cantado Bingo');
-                if (hayBingo(widget.isErrorFree)) {
-                  provider.cantadaBingo(
-                      usuario.getUser.uid, widget.cartonIndex);
-                  print('El bingo es correcto');
-                  WidgetsBinding.instance!.addPostFrameCallback((_) =>
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const Splash())));
+                  if (!provider.cantaBingoYa && !provider.estadoBingo) {
+                    if (hayBingo(provider.cartones[widget.cartonIndex],
+                        provider.pizarra, widget.matrix)) {
+                      provider.cantadaBingo(
+                          usuario.getUser.uid, widget.cartonIndex);
+                      print('El bingo es correcto');
+                      WidgetsBinding.instance!.addPostFrameCallback((_) =>
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const Splash())));
+                    }
+                  }
                 }
               }
-            }
-          }
-        }
-      },
-      child: StringNumberOrBlank(index: widget.index, matrix: widget.matrix),
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(widget.colorButton),
-      ),
-    );
+            },
+            child:
+                StringNumberOrBlank(index: widget.index, matrix: widget.matrix),
+            style: ButtonStyle(
+              backgroundColor:
+                  MaterialStateProperty.all<Color>(widget.colorButton),
+            ),
+          );
   }
 }
 
@@ -362,20 +396,15 @@ class StringNumberOrBlank extends StatelessWidget {
 }
 
 class Xmark extends StatefulWidget {
-  const Xmark({
-    Key? key,
-    required this.hasBeenPressed,
-    required this.isErrorFree,
-    required this.index,
-    required this.carton,
-    required this.cartonIndex,
-    required this.colortext,
-  }) : super(key: key);
+  const Xmark(
+      {Key? key,
+      required this.index,
+      required this.cartonIndex,
+      required this.colortext})
+      : super(key: key);
 
-  final List<ValueNotifier<bool>> hasBeenPressed;
-  final List<ValueNotifier<bool>> isErrorFree;
   final int index;
-  final Carton carton;
+
   final int cartonIndex;
   final Color colortext;
 
@@ -392,26 +421,31 @@ class _XmarkState extends State<Xmark> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<Proveedor>(context);
+
     if (widget.index == 12) {
       visible = false;
     } else {
-      visible = widget.hasBeenPressed[widget.index].value;
+      visible = provider.cartones[widget.cartonIndex].pressed[widget.index];
     }
 
     return Visibility(
         visible: visible,
         child: FittedBox(
-          child: IconButton(
-            padding: const EdgeInsets.all(0),
-            onPressed: () {
-              widget.hasBeenPressed[widget.index].value =
-                  !widget.hasBeenPressed[widget.index].value;
-
-              widget.isErrorFree[widget.index].value = true;
-            },
-            icon: const Icon(Icons.clear),
-            color: widget.colortext,
-            iconSize: 40,
+          child: Opacity(
+            opacity: 0.6,
+            child: IconButton(
+              padding: const EdgeInsets.all(0),
+              onPressed: () {
+                visible = false;
+                bool state = !provider
+                    .cartones[widget.cartonIndex].pressed[widget.index];
+                provider.sendPress(state, widget.cartonIndex, widget.index);
+              },
+              icon: const Icon(Icons.brightness_1),
+              color: widget.colortext,
+              iconSize: 40,
+            ),
           ),
         ));
   }

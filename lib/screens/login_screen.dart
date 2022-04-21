@@ -54,82 +54,88 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            width: double.infinity,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Flexible(
-                  child: Container(),
-                  flex: 2,
-                ),
-                SvgPicture.asset(
-                  'assets/vnbingo_logo_2.svg',
-                  height: 200,
-                  width: 400,
-                ),
-                const SizedBox(height: 24),
-                EntradaTexto(
-                    textEditingController: _emailcontrolador,
-                    hintText: 'Introduzca su email',
-                    textInputType: TextInputType.emailAddress),
-                const SizedBox(height: 24),
-                EntradaTexto(
-                  textEditingController: _passcontrolador,
-                  hintText: 'Password',
-                  textInputType: TextInputType.text,
-                  isPass: true,
-                ),
-                const SizedBox(height: 24),
-                InkWell(
-                  onTap: logInUser,
-                  child: Container(
-                    child: _cargando
-                        ? const SizedBox(
-                            height: 16,
-                            width: 16,
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                color: priColor,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 500),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              width: double.infinity,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: Container(),
+                    flex: 2,
+                  ),
+                  SvgPicture.asset(
+                    'assets/vnbingo_logo_2.svg',
+                    height: 200,
+                    width: 400,
+                  ),
+                  const SizedBox(height: 24),
+                  EntradaTexto(
+                      textEditingController: _emailcontrolador,
+                      hintText: 'Introduzca su email',
+                      textInputType: TextInputType.emailAddress),
+                  const SizedBox(height: 24),
+                  EntradaTexto(
+                    textEditingController: _passcontrolador,
+                    hintText: 'Password',
+                    textInputType: TextInputType.text,
+                    isPass: true,
+                  ),
+                  const SizedBox(height: 24),
+                  InkWell(
+                    onTap: logInUser,
+                    child: Container(
+                      child: _cargando
+                          ? const SizedBox(
+                              height: 16,
+                              width: 16,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: priColor,
+                                ),
                               ),
-                            ),
-                          )
-                        : const Text("Entrar"),
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    decoration: const ShapeDecoration(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(4))),
-                      color: myBlue,
+                            )
+                          : const Text("Entrar"),
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      decoration: const ShapeDecoration(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(4))),
+                        color: myBlue,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 12),
-                Flexible(
-                  child: Container(),
-                  flex: 3,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                        child: const Text('¿Primera vez?  '),
-                        padding: const EdgeInsets.symmetric(vertical: 8)),
-                    InkWell(
-                      onTap: iralSignup,
-                      child: Container(
-                          child: const Text(
-                            'Regístrese',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
+                  const SizedBox(height: 12),
+                  Flexible(
+                    child: Container(),
+                    flex: 3,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                          child: const Text('¿Primera vez?  '),
                           padding: const EdgeInsets.symmetric(vertical: 8)),
-                    ),
-                  ],
-                ),
-              ],
-            )),
+                      InkWell(
+                        onTap: iralSignup,
+                        child: Container(
+                            child: const Text(
+                              'Regístrese',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 8)),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

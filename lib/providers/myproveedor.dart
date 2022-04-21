@@ -55,7 +55,7 @@ class Proveedor with ChangeNotifier {
 
   void conexion(uid, email) {
     socket.connect();
-    registrar(uid, email);
+    // registrar(uid, email);
 
     socket.onReconnect((data) => print('recontecto!'));
 
@@ -109,13 +109,12 @@ class Proveedor with ChangeNotifier {
     _estadoLinea = hello;
     _cantaLineaYa = hello;
     var jugada = List<int>.from(data['jugada']['jugada'].map((x) => x));
-    var cartones = List<dynamic>.from((data['cartones'].map((x) => x)));
-    _cartones = [];
-    for (var e in cartones) {
-      recibeCarton(e);
+    if (_cartones.length == 0) {
+      var cartones = List<dynamic>.from((data['cartones'].map((x) => x)));
+      for (var e in cartones) {
+        recibeCarton(e);
+      }
     }
-
-    print(cartones);
 
     for (var element in jugada) {
       _pizarra[element - 1] = true;
@@ -134,7 +133,7 @@ class Proveedor with ChangeNotifier {
 //Manejo del ****************ESTADO DEL SERVIDOR***********************
   void desconexion() {
     _stateServer = -1;
-
+    _cartones = [];
     print('disconected');
     notifyListeners();
   }
@@ -228,6 +227,8 @@ class Proveedor with ChangeNotifier {
   }
 
   void sendPress(bool Value, int cartonIndex, int numeroIndex) {
+    _cartones[cartonIndex].pressed[numeroIndex] = Value;
+    notifyListeners();
     Map<String, dynamic> datos = {
       "uid": _uid,
       "value": Value,
@@ -252,15 +253,15 @@ class Proveedor with ChangeNotifier {
   }
 
   void cantaronlinea(data) {
-    _cantaLineaYa = false;
-
-    var jsonlist = data as List;
-    for (var e in jsonlist) {
-      ganadoresLinea.add(e);
+    if (_haysorteo) {
+      _cantaLineaYa = false;
+      var jsonlist = data as List;
+      for (var e in jsonlist) {
+        ganadoresLinea.add(e);
+      }
+      setestadoLinea();
+      setnotifyLinea(true);
     }
-
-    setestadoLinea();
-    setnotifyLinea(true);
   }
 
   void cantadaLinea(user, nlinea, ncarton) {

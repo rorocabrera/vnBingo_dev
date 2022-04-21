@@ -70,7 +70,6 @@ class _ListaCartonesState extends State<ListaCartones> {
               itemBuilder: (context, index) {
                 if (listProvider.cartones.isNotEmpty) {
                   return CartonWidget(
-                    carton: listProvider.cartones[index],
                     cartonindex: index,
                   );
                 } else {
@@ -108,7 +107,6 @@ class _ListaCartonesState extends State<ListaCartones> {
               itemBuilder: (BuildContext context, int index) {
                 if (listProvider.cartones.isNotEmpty) {
                   return CartonWidget(
-                    carton: listProvider.cartones[index],
                     cartonindex: index,
                   );
                 } else {

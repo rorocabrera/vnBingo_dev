@@ -62,81 +62,87 @@ class _LoginScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            width: double.infinity,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Flexible(
-                  child: Container(),
-                  flex: 1,
-                ),
-                SvgPicture.asset(
-                  'assets/vnbingo_logo_2.svg',
-                  height: 200,
-                  width: 400,
-                ),
-                const SizedBox(height: 8),
-                EntradaTexto(
-                    textEditingController: _emailcontrolador,
-                    hintText: 'Email',
-                    textInputType: TextInputType.emailAddress),
-                const SizedBox(height: 8),
-                EntradaTexto(
-                  textEditingController: _passcontrolador,
-                  hintText: 'Clave',
-                  textInputType: TextInputType.text,
-                  isPass: true,
-                ),
-                const SizedBox(height: 8),
-                EntradaTexto(
-                  textEditingController: _passvericontrolador,
-                  hintText: 'Confirme su Clave',
-                  textInputType: TextInputType.text,
-                  isPass: true,
-                ),
-                const SizedBox(height: 8),
-                InkWell(
-                  onTap: singUpuser,
-                  child: Container(
-                    child: _cargando
-                        ? const Center(
-                            child: SizedBox(
-                              height: 16,
-                              width: 16,
-                              child: CircularProgressIndicator(
-                                color: priColor,
-                              ),
-                            ),
-                          )
-                        : const Text("Registrarse"),
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    decoration: const ShapeDecoration(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(4))),
-                      color: myBlue,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 500),
+            child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: Container(),
+                      flex: 1,
                     ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Flexible(
-                  child: Container(),
-                  flex: 3,
-                ),
-                InkWell(
-                  onTap: iralLogin,
-                  child: Container(
-                      child: const Text(
-                        'Cerrar Cesión',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                    SvgPicture.asset(
+                      'assets/vnbingo_logo_2.svg',
+                      height: 200,
+                      width: 400,
+                    ),
+                    const SizedBox(height: 8),
+                    EntradaTexto(
+                        textEditingController: _emailcontrolador,
+                        hintText: 'Email',
+                        textInputType: TextInputType.emailAddress),
+                    const SizedBox(height: 8),
+                    EntradaTexto(
+                      textEditingController: _passcontrolador,
+                      hintText: 'Clave',
+                      textInputType: TextInputType.text,
+                      isPass: true,
+                    ),
+                    const SizedBox(height: 8),
+                    EntradaTexto(
+                      textEditingController: _passvericontrolador,
+                      hintText: 'Confirme su Clave',
+                      textInputType: TextInputType.text,
+                      isPass: true,
+                    ),
+                    const SizedBox(height: 8),
+                    InkWell(
+                      onTap: singUpuser,
+                      child: Container(
+                        child: _cargando
+                            ? const Center(
+                                child: SizedBox(
+                                  height: 16,
+                                  width: 16,
+                                  child: CircularProgressIndicator(
+                                    color: priColor,
+                                  ),
+                                ),
+                              )
+                            : const Text("Registrarse"),
+                        width: double.infinity,
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: const ShapeDecoration(
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4))),
+                          color: myBlue,
+                        ),
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 8)),
-                ),
-              ],
-            )),
+                    ),
+                    const SizedBox(height: 12),
+                    Flexible(
+                      child: Container(),
+                      flex: 3,
+                    ),
+                    InkWell(
+                      onTap: iralLogin,
+                      child: Container(
+                          child: const Text(
+                            'Cerrar Cesión',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 8)),
+                    ),
+                  ],
+                )),
+          ),
+        ),
       ),
     );
   }
